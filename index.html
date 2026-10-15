@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Authenticity Is a Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Libre+Franklin:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#cf0a2c; --red-deep:#aa0526; --red-darker:#9e0925; --navy:#11284c; --white:#ffffff;
+  --ink:#2c2c2c; --gray:#6b6b6b; --line:#e3e3e3; --paper:#faf7f5;
+  --radius:4px;
+  --font-display:"Libre Baskerville","Baskerville",Georgia,serif;
+  --font-text:"Libre Franklin","Franklin Gothic Book","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:60px}
+body{margin:0;font:400 16px/1.55 var(--font-text);color:var(--ink);background:var(--white)}
+h1,h2,h3{font-family:var(--font-display);margin:0}
+a{color:var(--red-deep)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.on-red :focus-visible,.gate :focus-visible,.hero :focus-visible,footer :focus-visible{outline-color:#fff}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.btn{display:inline-block;border:2px solid transparent;border-radius:var(--radius);padding:15px 25px;font:600 20px/1 var(--font-display);text-decoration:none;text-align:center}
+.btn.inv{background:#fff;color:var(--red-deep)}
+.btn.inv:hover{background:#f4e6e9}
+.btn.red{background:var(--red);color:#fff;border-color:#fff}
+.btn.red:hover{background:var(--red-deep)}
+.btn.solid{background:var(--red);color:#fff}
+.btn.solid:hover{background:var(--red-deep)}
+
+/* gate / title screen */
+.gate{min-height:100vh;display:grid;grid-template-columns:55fr 45fr}
+.gate .l{background:var(--red);color:#fff;padding:56px clamp(20px,6vw,80px);display:flex;flex-direction:column;justify-content:center;gap:20px}
+.gate .eb{font:600 13px/1 var(--font-text);letter-spacing:.14em;text-transform:uppercase;opacity:.9}
+.gate h1{font-size:58px;line-height:1.08;font-weight:700;letter-spacing:-.5px}
+.gate p{font-size:18px;max-width:30em;margin:0}
+.gate .btn{width:100%;max-width:420px}
+.gate .fine{font-size:12px;opacity:.9}
+.gate .r{background:repeating-linear-gradient(135deg,#aa0526 0 22px,#9e0925 22px 44px);color:#fff;display:flex;flex-direction:column;justify-content:center;padding:40px clamp(20px,5vw,64px);gap:6px}
+.gate .r div{font:700 64px/1.1 var(--font-display)}
+.gate .r small{display:block;font:500 14px/1.4 var(--font-text);opacity:.92;margin:0 0 22px;letter-spacing:.02em}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:var(--red-darker);color:#fff}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;height:48px;gap:12px}
+.bar b{font:600 13px var(--font-text);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.bar nav{display:flex;gap:18px;font-size:14px;overflow-x:auto;scrollbar-width:none}
+.bar nav::-webkit-scrollbar{display:none}
+.bar a{color:#fff;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+
+/* hero */
+.hero{background:var(--red);color:#fff;padding:72px 0}
+.hero h2{font-size:46px;line-height:1.12;font-weight:700;max-width:18em}
+.hero p{font-size:19px;max-width:34em;margin:18px 0 28px}
+.hero .btns{display:flex;gap:14px;flex-wrap:wrap}
+.hero ul{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;list-style:none;padding:0;margin:44px 0 0}
+.hero li{border-top:2px solid rgba(255,255,255,.6);padding-top:12px;font-size:15px}
+.hero li b{display:block;font:700 22px var(--font-display);margin-bottom:2px}
+
+/* sections */
+section{padding:72px 0}
+section.alt{background:var(--paper)}
+.eb2{font:600 12px var(--font-text);letter-spacing:.14em;text-transform:uppercase;color:var(--red-deep);margin:0 0 10px}
+h2.s{font-size:32px;line-height:1.2;font-weight:700;margin:0 0 18px;max-width:20em}
+.lead{font-size:18px;max-width:42em}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+.card h3{font-size:20px;margin-bottom:8px}
+.card p{margin:0}
+.card.hl{border-color:var(--red);border-width:2px}
+.q{font:italic 400 24px/1.35 var(--font-display);border-left:4px solid var(--red);padding-left:18px;margin:28px 0;max-width:30em}
+
+/* cases */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 20px}
+.tabs button{background:#fff;border:2px solid var(--red);color:var(--red-deep);border-radius:var(--radius);padding:12px 20px;font:600 17px var(--font-display)}
+.tabs button[aria-selected=true]{background:var(--red);color:#fff}
+.case{display:none}
+.case.on{display:block}
+.case .verdict{font:700 15px var(--font-text);letter-spacing:.1em;text-transform:uppercase;color:var(--red-deep);margin:0 0 6px}
+.case h3{font-size:30px;margin-bottom:6px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:22px 0}
+.grid3 .card h3{font-size:14px;font-family:var(--font-text);letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:10px}
+.grid3 ul{margin:0;padding-left:18px}
+.grid3 li{margin-bottom:6px}
+.note{background:#fff;border-left:4px solid var(--navy);padding:14px 18px;margin-top:8px;font-size:15px}
+.note b{color:var(--navy)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:22px 0}
+.stat{border-top:3px solid var(--red);padding-top:8px}
+.stat b{display:block;font:700 30px/1.1 var(--font-display)}
+.stat span{font-size:14px;color:var(--gray)}
+
+/* chart */
+.chart{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin:22px 0}
+.chart h4{margin:0 0 14px;font:600 14px var(--font-text)}
+.bars{display:grid;gap:10px}
+.bar-row{display:grid;grid-template-columns:64px 1fr 70px;gap:12px;align-items:center;font-size:14px}
+.track{background:#f1e5e7;border-radius:2px;height:26px}
+.fill{background:var(--red);height:100%;border-radius:2px}
+.bar-row b{text-align:right;font-variant-numeric:tabular-nums}
+.chart small{display:block;margin-top:12px;color:var(--gray);font-size:12px}
+
+/* sources */
+.src{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:24px}
+.src h3{font-size:18px;margin-bottom:10px}
+.src ul{margin:0;padding-left:18px;font-size:14px}
+.src li{margin-bottom:8px}
+.tl{margin:18px 0 0;padding:0;list-style:none;border-left:3px solid var(--red)}
+.tl li{padding:0 0 10px 16px;font-size:15px}
+.tl b{color:var(--red-deep)}
+details{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;margin-top:20px}
+summary{font:600 17px var(--font-display);cursor:pointer}
+details ul{margin:12px 0 0;padding-left:18px}
+
+footer{background:var(--red-darker);color:#fff;padding:40px 0;font-size:13px}
+footer a{color:#fff}
+footer p{margin:0 0 8px;opacity:.95}
+.top-btn{margin-top:10px;display:inline-block;color:#fff}
+
+[hidden]{display:none!important}
+@media (max-width:800px){
+  .gate{grid-template-columns:1fr}
+  .gate .r{order:-1;padding:28px 20px;flex-direction:row;flex-wrap:wrap;gap:4px 18px}
+  .gate .r div{font-size:34px}.gate .r small{display:none}
+  .gate .l{min-height:70vh}
+  .gate h1{font-size:36px}
+  .btn{width:100%}
+  .hero h2{font-size:32px}
+  .hero ul,.two,.grid3{grid-template-columns:1fr}
+  h2.s{font-size:26px}
+  .q{font-size:20px}
+  .bar b{display:none}
+  .bar-row{grid-template-columns:48px 1fr 62px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="l">
+    <div class="eb">Paper proposal</div>
+    <h1>Authenticity Is a Performance</h1>
+    <p>What did Bud Light lose that Patagonia kept? Three brands, one test: do the big decisions match the mission?</p>
+    <button class="btn inv" id="enter">Enter</button>
+    <div class="fine">A class presentation on brand authenticity. Brand names appear only as subjects of analysis.</div>
+  </div>
+  <div class="r" aria-hidden="true">
+    <div>Kept.</div><small>Patagonia</small>
+    <div>Lost.</div><small>Bud Light</small>
+    <div>Built.</div><small>Liquid Death</small>
+  </div>
+</div>
+
+<div id="site" hidden>
+<header class="bar"><div class="wrap"><b>Authenticity Is a Performance</b>
+  <nav><a href="#define">Definition</a><a href="#cases">Three cases</a><a href="#counter">Counterargument</a><a href="#stakes">Stakes</a><a href="#sources">Sources</a></nav></div></header>
+
+<div class="hero"><div class="wrap">
+  <h2>Brands win when their big decisions match their mission.</h2>
+  <p>Consumers reward consistency between what a brand says and what it does. Patagonia kept it, Bud Light lost it, and Liquid Death built it from scratch.</p>
+  <div class="btns"><a class="btn inv" href="#cases">See the three cases</a><a class="btn red" href="#sources">Sources</a></div>
+  <ul>
+    <li><b>2022</b>Patagonia’s founder gives the company away. “Earth is now our only shareholder.”</li>
+    <li><b>2023</b>Bud Light loses its spot as America’s best-selling beer.</li>
+    <li><b>The question</b>What did Bud Light lose that Patagonia kept?</li>
+  </ul>
+</div></div>
+
+<section id="define"><div class="wrap">
+  <p class="eb2">Setting the terms</p>
+  <h2 class="s">Authenticity is alignment over time, not origin.</h2>
+  <div class="two">
+    <div class="card"><h3>The common definition</h3><p>Real, original, not in it for the money.</p></div>
+    <div class="card hl"><h3>The definition used here</h3><p>A brand’s stated identity and its behavior line up over time.</p></div>
+  </div>
+  <p class="lead" style="margin-top:24px">Why it matters socially: people use brands to signal who they are. When a brand breaks character, it breaks that signal for its customers too.</p>
+</div></section>
+
+<section class="alt" id="cases"><div class="wrap">
+  <p class="eb2">Three cases</p>
+  <h2 class="s">Kept, lost, built.</h2>
+  <div class="tabs" role="tablist" aria-label="Case studies">
+    <button role="tab" aria-selected="true" data-c="pat">Patagonia: kept</button>
+    <button role="tab" aria-selected="false" data-c="bud">Bud Light: lost</button>
+    <button role="tab" aria-selected="false" data-c="ld">Liquid Death: built</button>
+  </div>
+
+  <div class="case on" id="pat">
+    <p class="verdict">Authenticity kept</p>
+    <h3>Every big decision matched the mission, even the ones that cost money.</h3>
+    <p class="q">“We’re in business to save our home planet.”</p>
+    <div class="grid3">
+      <div class="card"><h3>What it said</h3><ul><li>Mission: save our home planet</li><li>“Don’t Buy This Jacket” ad (2011)</li></ul></div>
+      <div class="card"><h3>What it did</h3><ul><li>1% of sales to grassroots environmental groups for decades; certified B Corp</li><li>Sept 2022: transferred the roughly $3 billion company. 2% (all voting stock) to the Patagonia Purpose Trust, 98% (non-voting) to the Holdfast Collective</li><li>About $100M a year in profits not reinvested goes to Holdfast</li></ul></div>
+      <div class="card"><h3>What it got</h3><ul><li>Loyalty</li><li>Pricing power</li><li>Pressure on the rest of the industry</li></ul></div>
+    </div>
+    <div class="note"><b>The tax critique supports the thesis.</b> Bloomberg reporters argued the structure avoided about $700M in capital gains taxes. The UC Law Review (“Taxagonia”) calls it legal tax planning and notes he still owed about $17.5M in gift taxes. Either way, the move stayed in character with the mission, and that is why it read as authentic.</div>
+  </div>
+
+  <div class="case" id="bud">
+    <p class="verdict">Authenticity abandoned</p>
+    <h3>The problem was not who they partnered with. The move connected to nothing the brand had built.</h3>
+    <div class="grid3">
+      <div class="card"><h3>The identity</h3><ul><li>American, blue-collar, sports-first</li><li>NFL sponsorships, “Real Men of Genius,” “Dilly Dilly”</li><li>Mainstream marketing never built on social issues</li></ul></div>
+      <div class="card"><h3>What happened (2023)</h3><ul><li>New marketing VP said the brand needed to move past its “fratty,” “out of touch” image to reach younger drinkers</li><li>The Dylan Mulvaney partnership was part of that push</li><li>Anheuser-Busch backed away without standing behind it or explaining it</li></ul></div>
+      <div class="card"><h3>What it cost</h3><ul><li>Core customers and LGBTQ consumers and advocates both lost trust</li><li>Broke character twice, trusted by nobody</li><li>Modelo Especial took #1</li></ul></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>−24%</b><span>Bud Light sales, week ending June 3, 2023 (Nielsen via AP)</span></div>
+      <div class="stat"><b>#1 → lost</b><span>Held the top spot since 2001; Modelo Especial took it</span></div>
+      <div class="stat"><b>−13.5%</b><span>A-B U.S. revenue, Q3 2023 (CNN)</span></div>
+      <div class="stat"><b>−9.5%</b><span>A-B U.S. revenue, full-year 2023 (Brewbound)</span></div>
+    </div>
+    <div class="note"><b>Framing.</b> The critique is about brand strategy and how the company handled it. The failure is inconsistency, not inclusion. Anheuser-Busch had a long record of LGBTQ support (see the timeline in Sources), so the careful claim is that Bud Light’s mainstream marketing identity was never built around social issues.</div>
+  </div>
+
+  <div class="case" id="ld">
+    <p class="verdict">Authenticity manufactured</p>
+    <h3>It is canned water. It has never broken character.</h3>
+    <p class="q">“Murder your thirst.”</p>
+    <div class="grid3">
+      <div class="card"><h3>The identity</h3><ul><li>Heavy metal branding</li><li>“Murder your thirst,” “Death to Plastic”</li><li>Founded 2017 by Mike Cessario, a former ad creative</li></ul></div>
+      <div class="card"><h3>Why it counts</h3><ul><li>Authenticity can be designed on purpose</li><li>Customers know it is a bit and buy in anyway</li><li>Audiences care more about consistency than origin</li></ul></div>
+      <div class="card"><h3>Scale</h3><ul><li>About 113,000 retail stores</li><li>Around 5 million TikTok followers</li><li>$1.4B valuation after a $67M round (March 2024)</li></ul></div>
+    </div>
+    <div class="chart"><h4>Liquid Death revenue, $ millions</h4>
+      <div class="bars" id="bars"></div>
+      <small>Sacra estimates. 2024 is an estimate. Verify before presenting.</small></div>
+  </div>
+</div></section>
+
+<section id="counter"><div class="wrap">
+  <p class="eb2">Counterargument</p>
+  <h2 class="s">Isn’t Liquid Death just clever marketing?</h2>
+  <div class="two">
+    <div class="card"><h3>The objection</h3><p>Liquid Death is just clever marketing. Patagonia is the only real example of authenticity.</p></div>
+    <div class="card hl"><h3>The response</h3><p>Consumers do not audit origin stories. They watch for hypocrisy. Liquid Death’s tone and anti-plastic mission have stayed the same since day one. That is the same test Patagonia passes and Bud Light failed.</p></div>
+  </div>
+  <div class="note" style="margin-top:20px"><b>The strongest challenge: Death Dust.</b> Critics note every aluminum can has a plastic liner (Plastics Today), and the powdered drink mix packets use non-recyclable packaging with a plastic layer (Print/Dieline), with little public backlash. A possible answer: Liquid Death’s real character is the humor, not environmental purity, so the humor is the part it cannot break.</div>
+</div></section>
+
+<section class="alt" id="stakes"><div class="wrap">
+  <p class="eb2">Stakes</p>
+  <h2 class="s">Trust is the one thing a brand cannot buy back.</h2>
+  <div class="two">
+    <div class="card"><h3>Consumers vote with their wallets</h3><p>Brand identity now shapes purchases.</p></div>
+    <div class="card"><h3>Broken character costs more than sales</h3><p>Brands that break character lose trust they can’t buy back.</p></div>
+  </div>
+  <p class="lead" style="margin-top:24px">High-stakes moments mean more. Yvon Chouinard turning down hundreds of millions by giving the company away shows what he values.</p>
+  <p class="q">Authenticity is the decisions a brand makes that line up with who it is.</p>
+  <p class="lead">Back to the hook: Patagonia gave the company away to protect its mission. Bud Light chased a new audience and lost the one it had.</p>
+</div></section>
+
+<section id="sources"><div class="wrap">
+  <p class="eb2">Research</p>
+  <h2 class="s">Sources and data.</h2>
+  <p class="lead">Figures come from the sources listed. Double-check all dollar figures, sales numbers and dates before presenting.</p>
+
+  <h3 style="margin-top:36px;font-size:22px">Anheuser-Busch and LGBTQ support before 2023</h3>
+  <ul class="tl">
+    <li><b>1995</b> One of the first major beer brands to run LGBTQ-inclusive ads, in magazines aimed at gay readers (Newsweek)</li>
+    <li><b>2015</b> Perfect 100 on the Human Rights Campaign Corporate Equality Index (Newsweek)</li>
+    <li><b>2016</b> “Bud Light Party” campaign included a spot celebrating marriage equality (Newsweek; Fast Company)</li>
+    <li><b>2017</b> Publicly criticized Boston’s St. Patrick’s Day Parade organizers for excluding an LGBTQ veterans group (Newsweek)</li>
+    <li><b>2020</b> Bud Light Canada ran Pride ads with Drag Race queens raising money for Rainbow Railroad (Fast Company)</li>
+    <li><b>2022</b> Limited-edition Pride cans (Fast Company)</li>
+    <li><b>Complication</b> Newsweek also reports about $107,000 given to state lawmakers backing anti-trans bills, 2015 to 2021</li>
+  </ul>
+
+  <div class="src">
+    <div class="card"><h3>Bud Light</h3><ul>
+      <li><a href="https://www.newsweek.com/anheuser-busch-complicated-relationship-lgbtq-community-1794062" target="_blank" rel="noopener">Newsweek: Anheuser-Busch’s complicated relationship with the LGBTQ+ community</a> (Nick Reynolds, April 12, 2023)</li>
+      <li><a href="https://www.fastcompany.com/90888756/bud-light-inclusive-marketing-right-wing-outrage" target="_blank" rel="noopener">Fast Company: Bud Light poured decades of LGBTQ allyship down the drain</a> (Jeff Beer, April 29, 2023)</li>
+      <li><a href="https://www.forbes.com/sites/tylerroush/2023/04/22/more-bud-light-dylan-mulvaney-fallout-marketing-executive-out-amid-far-right-uproar/" target="_blank" rel="noopener">Forbes: Bud Light marketing executive out</a> (Tyler Roush, April 22, 2023)</li>
+      <li><a href="https://bendbulletin.com/2023/06/14/bud-light-top-us-seller-since-2001-loses-sales-crown-to-modelo-as-backlash-continues/" target="_blank" rel="noopener">AP via The Bulletin: Bud Light loses sales crown to Modelo</a> (Dee-Ann Durbin, June 14, 2023)</li>
+      <li><a href="https://fortune.com/2023/05/19/lgbtq-group-suspends-bud-light-makers-rating-transgender" target="_blank" rel="noopener">Fortune: LGBTQ group suspends Bud Light maker’s rating</a> (May 19, 2023)</li>
+      <li><a href="https://www.cnn.com/2023/10/31/investing/bud-light-anheuser-busch-earnings/index.html" target="_blank" rel="noopener">CNN: Bud Light sales keep sinking</a> (Oct. 31, 2023)</li>
+      <li><a href="https://www.brewbound.com/news/a-b-us-revenue-9-5-in-2023-shipments-12-7-depletions-11-9/" target="_blank" rel="noopener">Brewbound: A-B U.S. revenue down 9.5% in 2023</a></li></ul></div>
+    <div class="card"><h3>Patagonia</h3><ul>
+      <li><a href="https://www.cnbc.com/2022/09/14/patagonia-founder-donates-entire-company-to-fight-climate-change.html" target="_blank" rel="noopener">CNBC: Patagonia founder donates company</a> (Sept. 14, 2022)</li>
+      <li><a href="https://www.patagoniaworks.com/press/2022/9/14/patagonias-next-chapter-earth-is-now-our-only-shareholder" target="_blank" rel="noopener">Patagonia: Earth is now our only shareholder</a></li>
+      <li><a href="https://time.com/6213780/patagonia-founder-chouinard-climate/" target="_blank" rel="noopener">Time: Why Patagonia’s founder gave away his company</a></li>
+      <li><a href="https://uclawreview.org/2022/11/02/taxagonia/" target="_blank" rel="noopener">UC Law Review: Taxagonia</a> (Paul G. Rando, Nov. 2, 2022)</li>
+      <li><a href="https://whitmanwire.com/science-environment/2024/02/29/contradictions-and-climate-patagonias-philanthropic-restructuring/" target="_blank" rel="noopener">Whitman Wire: Contradictions and Climate</a> (Feb. 29, 2024)</li>
+      <li><a href="https://verfassungsblog.de/the-transfer-of-ownership-in-the-patagonia-case/" target="_blank" rel="noopener">Verfassungsblog: The Patagonia case</a></li></ul></div>
+    <div class="card"><h3>Liquid Death</h3><ul>
+      <li><a href="https://www.nbcnews.com/business/business-news/liquid-death-became-billion-dollar-beverage-brand-rcna143037" target="_blank" rel="noopener">NBC News: How Liquid Death became a billion-dollar brand</a></li>
+      <li><a href="https://sacra.com/c/liquid-death/" target="_blank" rel="noopener">Sacra: Liquid Death revenue estimates</a></li>
+      <li><a href="https://www.plasticstoday.com/business/liquid-death-may-murder-your-thirst-but-it-won-t-kill-plastic-no-matter-what-the-ads-say" target="_blank" rel="noopener">Plastics Today: Liquid Death won’t kill plastic</a> (John Spevacek, March 22, 2024)</li>
+      <li><a href="https://www.printmag.com/branding-identity-design/should-liquid-deaths-powdered-drink-mix-raise-doubts-about-its-death-to-plastic-mission/" target="_blank" rel="noopener">Print/Dieline: Liquid Death’s powdered drink mix</a> (Rudy Sanchez, June 10, 2024)</li></ul></div>
+  </div>
+
+  <details><summary>Presenter reminders</summary><ul>
+    <li>Keep the Bud Light critique on strategy. Never on the influencer or the community.</li>
+    <li>The failure is inconsistency, not inclusion.</li>
+    <li>Don’t say Anheuser-Busch had zero LGBTQ history. Say its mainstream identity was never built on social issues.</li>
+    <li>Double-check all dollar figures, sales numbers and dates.</li></ul></details>
+</div></section>
+
+<footer><div class="wrap">
+  <p>Paper proposal: Authenticity Is a Performance. Brand names appear only as subjects of analysis; no logos or brand artwork are used.</p>
+  <p>Figures and quotations are taken from the cited sources and should be verified before citing in the paper.</p>
+  <a class="top-btn" href="#top" onclick="window.scrollTo({top:0});return false">Back to top</a>
+</div></footer>
+</div>
+
+<script>
+document.getElementById("enter").onclick=function(){
+  document.getElementById("gate").hidden=true;
+  document.getElementById("site").hidden=false;
+  window.scrollTo(0,0);
+};
+document.querySelectorAll(".tabs button").forEach(function(b){
+  b.onclick=function(){
+    document.querySelectorAll(".tabs button").forEach(function(x){x.setAttribute("aria-selected",x===b)});
+    document.querySelectorAll(".case").forEach(function(c){c.classList.toggle("on",c.id===b.dataset.c)});
+  };
+});
+var data=[["2021",45],["2022",110],["2023",263],["2024",333]],max=333,bars=document.getElementById("bars");
+data.forEach(function(d){
+  var r=document.createElement("div");r.className="bar-row";
+  r.innerHTML='<span>'+d[0]+'</span><div class="track"><div class="fill" style="width:'+(d[1]/max*100)+'%"></div></div><b>$'+d[1]+'M</b>';
+  bars.appendChild(r);
+});
+</script>
+</body>
+</html>
